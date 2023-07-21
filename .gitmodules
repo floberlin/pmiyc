@@ -1,0 +1,15 @@
+[submodule "aa/lib/forge-std"]
+	path = aa/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "aa/lib/account-abstraction"]
+	path = aa/lib/account-abstraction
+	url = https://github.com/eth-infinitism/account-abstraction
+[submodule "aa/lib/openzeppelin-contracts"]
+	path = aa/lib/openzeppelin-contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "Erc721GatedPaymaster/lib/openzeppelin-contracts"]
+	path = Erc721GatedPaymaster/lib/openzeppelin-contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "Erc721GatedPaymaster/lib/account-abstraction"]
+	path = Erc721GatedPaymaster/lib/account-abstraction
+	url = https://github.com/eth-infinitism/account-abstraction
