@@ -13,6 +13,7 @@
     "@biconomy/smart-account": "^2.0.1",
     "@biconomy/transak": "^2.0.0",
     "@biconomy/web3-auth": "^2.0.0",
+    "@sismo-core/sismo-connect-react": "^0.0.20",
     "@types/node": "20.2.5",
     "@types/react": "18.2.7",
     "@types/react-dom": "18.2.4",
