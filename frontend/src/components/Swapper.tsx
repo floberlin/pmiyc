@@ -4,11 +4,9 @@ import styles from "../styles/Swap.module.css";
 import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import { ethers } from "ethers";
-import { abi as IUniswapV3PoolABI } from "@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json";
-import { abi as SwapRouterABI } from "@uniswap/v3-periphery/artifacts/contracts/interfaces/ISwapRouter.sol/ISwapRouter.json";
+import { Transaction, ethers } from "ethers";
 import erc20Abi from "../utils/erc20abi.json";
+import sparkApi from "../utils/sparkabi.json";
 import { BiconomySmartAccount } from "@biconomy/account";
 import { getPoolImmutables, getPoolState } from "../utils/helpers";
 import { ChainId } from "@biconomy/core-types";
@@ -26,8 +24,6 @@ type Props = {
   loading: boolean;
 };
 
-const poolAddress = "0x45dDa9cb7c25131DF268515131f647d726f50608"; // WETH/LINK
-const swapRouterAddress = "0xE592427A0AEce92De3Edee1F18E0157C05861564";
 // SDAI GOERLI 0xd8134205b0328f5676aaefb3b2a0dc15f4029d8c
 const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
   const [token1, setToken1] = useState<Token | null>(null);
@@ -35,7 +31,6 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
   const [amount, setAmount] = useState<string>("");
 
   const tokens: Token[] = [
-    // { name: 'USDC', symbol: 'USDC', address: '"0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"', decimals: 6},
     {
       name: "SDAI",
       symbol: "SDAI",
@@ -43,8 +38,8 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
       decimals: 6,
     },
     {
-      name: "WETH",
-      symbol: "WETH",
+      name: "DAI",
+      symbol: "DAI",
       address: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
       decimals: 18,
     },
@@ -73,22 +68,10 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
         progress: undefined,
         theme: "dark",
       });
-      const poolContract = new ethers.Contract(
-        poolAddress,
-        IUniswapV3PoolABI,
-        provider
-      );
 
-      const immutables = await getPoolImmutables(poolContract);
-      const state = await getPoolState(poolContract);
-      console.log({ immutables, state });
-      await getBalances();
+      const sparkAddress = "";
 
-      const swapRouterContract = new ethers.Contract(
-        swapRouterAddress,
-        SwapRouterABI,
-        provider
-      );
+      const sparkContract = new ethers.Contract(sparkAddress, sparkApi);
 
       // .001 => 1 000 000 000 000 000
       const amountIn: any = ethers.utils.parseUnits(
@@ -96,44 +79,28 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
         tokens[0].decimals
       );
 
-      const approvalAmount = (amountIn * 2).toString();
-      const tokenContract0 = new ethers.Contract(
-        immutables.token0,
-        erc20Abi,
-        provider
+      const abi = ethers.utils.defaultAbiCoder;
+      const params = abi.encode(
+        ["uint256", "address", "address"], // encode as address array
+        [amountIn, smartAccount.address, smartAccount.address]
       );
 
-      const approvalTrx = await tokenContract0.populateTransaction.approve(
-        swapRouterAddress,
-        approvalAmount
-      );
-      const tx1 = {
-        to: immutables.token0,
-        data: approvalTrx.data,
-      };
-      const params = {
-        tokenIn: immutables.token0,
-        tokenOut: immutables.token1,
-        fee: immutables.fee,
-        recipient: smartAccount?.address,
-        deadline: Math.floor(Date.now() / 1000) + 60 * 10,
-        amountIn: amountIn,
-        amountOutMinimum: 0,
-        sqrtPriceLimitX96: 0,
-      };
-      const swapTrx =
-        await swapRouterContract.populateTransaction.exactInputSingle(params, {
-          gasLimit: ethers.utils.hexlify(1000000),
-        });
-      const tx2 = {
-        to: swapRouterAddress,
-        data: swapTrx.data,
+      const rawTx = sparkContract.populateTransaction["redeem"][params];
+
+      // redeem(<amount>, msg.sender, msg.sender)
+      const data = {};
+      const transaction = {
+        to: "0x2de614ceD6C8B929b9968342d11e61648373B19c",
+        data: rawTx,
+        value: "0",
       };
 
-      const txResponse = await smartAccount.sendSignedUserOp
-      // .sendTransactionBatch({
-      //   transactions: [tx1, tx2],
-      // });
+      const userOp = await smartAccount.buildUserOp([transaction]);
+      const paymasterAddress = "0x2647d39d50bd604d5bacf7504cf648135d450e14";
+      userOp.paymasterAndData = ethers.utils.toUtf8Bytes(`${paymasterAddress}`);
+
+      const txResponse = await smartAccount.sendUserOp(userOp);
+
       const txHash = await txResponse.wait();
       console.log({ txHash });
       console.log({ txResponse });
