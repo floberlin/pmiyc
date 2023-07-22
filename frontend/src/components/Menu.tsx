@@ -2,7 +2,6 @@ import { ChainId } from "@biconomy/core-types";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import styles from "../styles/Menu.module.css";
-import Onboarder from "./Onboarder";
 import { BiconomySmartAccount } from "@biconomy/account";
 
 type Props = {
@@ -27,12 +26,6 @@ const OffCanvasMenu: React.FC<Props> = ({
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
-
-  function truncateAddress(add: string) {
-    const len = add.length;
-    if (len < 11) return add;
-    return add.substring(0, 6) + "..." + add.substring(len - 4, len);
-  }
 
   const getBalances = async () => {
     const balanceParams = {
@@ -64,7 +57,7 @@ const OffCanvasMenu: React.FC<Props> = ({
           X
         </button>
         <ul>
-          <li>{truncateAddress(address)}</li>
+          <li className="break-all">{address}</li>
           <li>Balance: {usdBlance}</li>
           <div className={styles.logoutButtonWrapper}>
             {tokenBalances?.map((tok: any, i: any) => {
@@ -84,7 +77,6 @@ const OffCanvasMenu: React.FC<Props> = ({
               );
             })}
           </div>
-          <Onboarder address={address} userInfo={userInfo} />
           <button className="btn btn-primary" onClick={logout}>
             Logout
           </button>

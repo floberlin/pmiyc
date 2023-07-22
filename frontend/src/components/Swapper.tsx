@@ -83,7 +83,7 @@ const Swapper: React.FC<Props> = ({
       };
 
       const userOp = await smartAccount.buildUserOp([tx]);
-      userOp.paymasterAndData = `0xa72EB87BFC97ad19AC65710D4912D300094C9A40${sismoResponse}`;
+      userOp.paymasterAndData = `0xD1b2842F5ca284cE94d4CE276090e840D7E440E5${sismoResponse}`;
 
       console.log("userOp", userOp);
 
@@ -212,12 +212,10 @@ const Swapper: React.FC<Props> = ({
 
       {!loading && (
         <>
-          <br></br>
-          <div className="card card-bordered w-96 bg-base-100 shadow-xl p-6 mt-4">
-            <br></br>
+          <div className="card card-bordered w-96 bg-base-100 shadow-xl p-6 mt-6">
             <h2 className="text-center">Swap sDAI for DAI</h2>
-            <br></br>
-            <div className="border-red border-2">
+
+            <div className="my-4">
               <input
                 className="input input-bordered w-full"
                 type="number"
@@ -226,7 +224,6 @@ const Swapper: React.FC<Props> = ({
                 step={0.01}
               />
             </div>
-            <br></br>
 
             <div className="flex">
               <button

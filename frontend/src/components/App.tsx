@@ -220,7 +220,6 @@ export default function App() {
             loading={loading}
             sismoResponse={sismoResponse}
           />
-          {/* <Onboarder address={smartAccount.address} userInfo={userInfo} /> */}
         </div>
       )}
       {loading && (
