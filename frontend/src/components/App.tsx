@@ -132,7 +132,9 @@ export default function App() {
           className={styles.imageItem}
         />
         <div className={styles.header}>
-          <h1>Connect and start staking</h1>
+          <h1 className="text-3xl text-white font-bold underline">
+            Connect and start staking
+          </h1>
           <p>
             Swap USDC and WETH and sample the onboarding power of Account
             Abstraction
