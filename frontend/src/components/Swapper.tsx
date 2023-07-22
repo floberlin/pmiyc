@@ -34,7 +34,7 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
     {
       name: "SDAI",
       symbol: "sDAI",
-      address: '"0xd8134205b0328f5676aaefb3b2a0dc15f4029d8c"',
+      address: "0xd8134205b0328f5676aaefb3b2a0dc15f4029d8c",
       decimals: 18,
     },
     {
@@ -44,17 +44,6 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
       decimals: 18,
     },
   ];
-
-  const getBalances = async () => {
-    const balanceParams = {
-      chainId: ChainId.POLYGON_MAINNET, // chainId of your choice
-      eoaAddress: smartAccount?.address,
-      tokenAddresses: [],
-    };
-
-    const balFromSdk = await smartAccount.getAllTokenBalances(balanceParams);
-    console.info("getAlltokenBalances", balFromSdk);
-  };
 
   const handleSwap = async () => {
     try {
@@ -70,8 +59,6 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
       });
 
       const sparkAddress = "0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C";
-
-      const sig = provider.getSigner();
 
       const sparkContract = new ethers.Contract(sparkAddress, sparkApi);
 
