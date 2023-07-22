@@ -229,12 +229,12 @@ export default function App() {
         </div>
       )}
       {!smartAccount && !loading && (
-        <div className="">
-          <div className="">
-            <button className="btn btn-primary" onClick={login}>
-              Connect and Swap
+        <div className="flex justify-center mt-8">
+         
+            <button className="btn btn-primary mx-auto" onClick={login}>
+              Get Started
             </button>
-          </div>
+          
         </div>
       )}
 
