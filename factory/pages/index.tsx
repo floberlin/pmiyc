@@ -8,12 +8,14 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, set, useForm } from "react-hook-form";
 import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
+  useAccount,
 } from "wagmi";
+import { useState } from "react";
 import zkpaymasterFactory from "../utils/zkpaymasterFactory.json";
 
 const Home: NextPage = () => {
@@ -23,16 +25,20 @@ const Home: NextPage = () => {
     formState: { errors },
   } = useForm();
 
+  const [entryPoint, setEntryPoint] = useState(
+    "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
+  );
+  const { address: walletAddress } = useAccount();
+  const [sappID, setSappID] = useState("0x45792cd187672019da6ee08aef36eb46");
+  const [sgroupID, setSgroupID] = useState(
+    "0xe0e48a90f6e0fcbd6dd5c27de151e263"
+  );
+
   const { config } = usePrepareContractWrite({
     address: "0xD27a60fccBd9d2A3F81fbC88d28DE47209d55640",
     abi: zkpaymasterFactory.abi,
     functionName: "create",
-    args: [
-      "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
-      "0x35E928fBAd7a404fbcffA51c85d2ccFd045663CB",
-      "0x45792cd187672019da6ee08aef36eb46",
-      "0xa2dc87293a0977b6697c09c892cd4cb4",
-    ],
+    args: [entryPoint, walletAddress, sappID, sgroupID],
   });
 
   const { data, write } = useContractWrite(config);
@@ -43,6 +49,9 @@ const Home: NextPage = () => {
 
   const deployFactory = (formData: any) => {
     console.log(formData);
+    setEntryPoint(formData.entrypoint);
+    setSappID(formData.appid);
+    setSgroupID(formData.groupid);
 
     write?.();
   };
@@ -61,7 +70,18 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <ConnectButton />
 
-        <form onSubmit={handleSubmit((formData) => deployFactory(formData))}>
+        <form
+          onSubmit={handleSubmit((formData) => deployFactory(formData))}
+          className="w-2/3"
+        >
+          <div>
+            <a
+              className="underline"
+              href={`https://factory.sismo.io/apps-explorer`}
+            >
+              Link to Sismo
+            </a>
+          </div>
           <div>
             <label
               htmlFor="appid"
@@ -75,7 +95,7 @@ const Home: NextPage = () => {
                 name="appid"
                 id="appid"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="sismo-app-id"
+                placeholder="0x45792cd187672019da6ee08aef36eb46"
               />
             </div>
           </div>
@@ -92,7 +112,7 @@ const Home: NextPage = () => {
                 name="groupid"
                 id="groupid"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="sismo-group-id"
+                placeholder="0xe0e48a90f6e0fcbd6dd5c27de151e263"
               />
             </div>
           </div>
@@ -114,8 +134,39 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <input type="submit" />
+          <input
+            type="submit"
+            className="mt-4 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          />
         </form>
+        {isLoading && (
+          <div>
+            Creating your zkPaymaster...
+            <div>
+              <a href={`https://goerli.etherscan.io/tx/${data?.hash}`}>
+                Etherscan
+              </a>
+            </div>
+          </div>
+        )}
+        {isSuccess && (
+          <div>
+            Successfully created your zkPaymaster!
+            <div>
+              <a href={`https://goerli.etherscan.io/tx/${data?.hash}`}>
+                Etherscan
+              </a>
+            </div>
+            <div className="mt-4">
+              <a
+                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                href="https://zkpaymaster.vercel.app/"
+              >
+                PUT IT TO ACTION
+              </a>
+            </div>
+          </div>
+        )}
       </main>
 
       <footer className={styles.footer}>
