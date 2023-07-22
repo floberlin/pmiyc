@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 import "../src/zkPaymaster.sol";
 
 contract ZKPaymasterTest is Test {
-    zkPaymaster public erc721GatedPaymaster;
+    ZKPaymaster public zkPaymaster;
 
     function setUp() public {}
 }
