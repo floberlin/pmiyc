@@ -11,7 +11,6 @@ import { ChainId } from "@biconomy/core-types";
 import { ethers } from "ethers";
 import Swapper from "./Swapper";
 import Spinner from "./Spinner";
-import Onboarder from "./Onboarder";
 import Image from "next/image";
 import Menu from "./Menu";
 import {
@@ -32,8 +31,6 @@ export default function App() {
   const [userInfo, setUserInfo] = useState<any>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [sismoResponse, setSismoResponse] = useState("");
-
-  console.log("smartAccount", smartAccount);
 
   function truncateAddress(add: string) {
     const len = add.length;
@@ -191,10 +188,7 @@ export default function App() {
               auths={[{ authType: AuthType.VAULT }]}
               // request zk proof that Data Source are part of a group
               // (e.g NFT ownership, Dao Participation, GitHub commits)
-              claims={[
-                // ENS DAO Voters
-                { groupId: "0xe0e48a90f6e0fcbd6dd5c27de151e263" },
-              ]}
+              claims={[{ groupId: "0xe0e48a90f6e0fcbd6dd5c27de151e263" }]}
               // request message signature from users.
               signature={{
                 message: (
@@ -205,7 +199,7 @@ export default function App() {
               onResponse={async (response: SismoConnectResponse) => {}}
               // reponse in bytes to call a contract
               onResponseBytes={async (response: string) => {
-                console.log(response);
+                console.log("sismoResponse", response);
                 setSismoResponse(response);
               }}
             />

@@ -21,34 +21,9 @@ const OffCanvasMenu: React.FC<Props> = ({
   userInfo,
   smartAccount,
 }) => {
-  const [usdBlance, setUsdBalance] = useState<any>(0);
-  const [tokenBalances, setTokenBalance] = useState<any>([]);
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
-
-  const getBalances = async () => {
-    const balanceParams = {
-      chainId: ChainId.GOERLI, // chainId of your choice
-      eoaAddress: smartAccount?.address || "",
-      tokenAddresses: [],
-    };
-
-    const balFromSdk = await smartAccount?.getAllTokenBalances(balanceParams);
-    const usdBalFromSdk = await smartAccount?.getTotalBalanceInUsd(
-      balanceParams
-    );
-
-    const rounded = (
-      Math.round(usdBalFromSdk?.data.totalBalance || 0 * 10) / 10
-    ).toFixed(2);
-
-    setUsdBalance(rounded);
-    setTokenBalance(balFromSdk?.data);
-  };
-  useEffect(() => {
-    getBalances();
-  }, [isOpen]);
 
   return (
     <div>
@@ -56,31 +31,13 @@ const OffCanvasMenu: React.FC<Props> = ({
         <button className="btn btn-primary" onClick={handleToggle}>
           X
         </button>
-        <ul>
+
+        <ul className="mt-4">
           <li className="break-all">{address}</li>
-          <li>Balance: {usdBlance}</li>
-          <div className={styles.logoutButtonWrapper}>
-            {tokenBalances?.map((tok: any, i: any) => {
-              if (tok.contract_ticker_symbol == "DAI") {
-                return (
-                  <li key={i}>
-                    {tok.contract_ticker_symbol} :{" "}
-                    {parseInt(tok.balance) / 10 ** 6}
-                  </li>
-                );
-              }
-              return (
-                <li key={i}>
-                  {tok.contract_ticker_symbol} :{" "}
-                  {ethers.utils.formatEther(tok.balance)}
-                </li>
-              );
-            })}
-          </div>
+
           <button className="btn btn-primary" onClick={logout}>
             Logout
           </button>
-          {/* Add more menu items as needed */}
         </ul>
       </div>
     </div>
