@@ -54,10 +54,10 @@ export default function App() {
     if (!sdkRef.current) {
       const socialLoginSDK = new SocialLogin();
       const signature1 = await socialLoginSDK.whitelistUrl(
-        "http://127.0.0.1:5173/"
+        "http://127.0.0.1:3000/"
       );
       await socialLoginSDK.init({
-        chainId: ethers.utils.hexValue(ChainId.POLYGON_MUMBAI).toString(),
+        chainId: ethers.utils.hexValue(ChainId.GOERLI).toString(),
         network: "testnet",
         whitelistUrls: {
           "http://127.0.0.1:3000/": signature1,
@@ -85,7 +85,7 @@ export default function App() {
     try {
       const biconomySmartAccountConfig: BiconomySmartAccountConfig = {
         signer: web3Provider.getSigner(),
-        chainId: ChainId.POLYGON_MUMBAI,
+        chainId: ChainId.GOERLI,
         // bundler: bundler,
         // paymaster: paymaster,
       };
@@ -148,20 +148,7 @@ export default function App() {
               vault: {
                 // For development purposes insert the Data Sources that you want to impersonate here
                 // Never use this in production
-                impersonate: [
-                  // EVM
-                  "leo21.sismo.eth",
-                  "0xA4C94A6091545e40fc9c3E0982AEc8942E282F38",
-                  "0x1b9424ed517f7700e7368e34a9743295a225d889",
-                  "0x82fbed074f62386ed43bb816f748e8817bf46ff7",
-                  "0xc281bd4db5bf94f02a8525dca954db3895685700",
-                  // Github
-                  "github:leo21",
-                  // Twitter
-                  "twitter:leo21_eth",
-                  // Telegram
-                  "telegram:leo21",
-                ],
+                impersonate: [],
               },
               // displayRawResponse: true,
             }}
@@ -175,16 +162,12 @@ export default function App() {
             ]}
             // request message signature from users.
             signature={{
-              message: (smartAccount as SmartAccount).address.toString(),
+              message: (
+                smartAccount as BiconomySmartAccount
+              )?.address?.toString(),
             }}
             // retrieve the Sismo Connect Reponse from the user's Sismo data vault
-            onResponse={async (response: SismoConnectResponse) => {
-              const res = await fetch("/api/verify", {
-                method: "POST",
-                body: JSON.stringify(response),
-              });
-              console.log(await res.json());
-            }}
+            onResponse={async (response: SismoConnectResponse) => {}}
             // reponse in bytes to call a contract
             // onResponseBytes={async (response: string) => {
             //   console.log(response);
@@ -196,13 +179,13 @@ export default function App() {
             Connect and start staking
           </h1>
           <p>
-            Swap USDC and WETH and sample the onboarding power of Account
+            Swap SDAI and WETH and sample the onboarding power of Account
             Abstraction
           </p>
         </div>
         {!!smartAccount && (
           <button className={styles.account} onClick={() => setIsOpen(true)}>
-            {truncateAddress(smartAccount.address)}
+            {truncateAddress(smartAccount?.address)}
           </button>
         )}
         {!smartAccount && !loading && (
