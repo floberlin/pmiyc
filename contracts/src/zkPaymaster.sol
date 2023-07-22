@@ -133,7 +133,44 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
 
         // check proof and proof needs to check if the opTX contains the samrt account address
 
-        // check that only sDAI transfers are allowed 
+        // check that only sDAI transfers are allowed //? goerli sDAI: 0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C
+
+        // check that userOp.callData includes 0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C
+
+        require(
+            checkBytesIncluded(
+                userOp.callData,
+                hex'D8134205b0328F5676aaeFb3B2a0DC15f4029d8C'
+            ),
+            "not allowed, only sDAI transfers are allowed"
+        );
+    }
+
+
+    // function simply checks if a short byte array is included in a long byte array
+    // in our case we check if the sDAI address is included in the callData
+    function checkBytesIncluded(
+        bytes memory _long,
+        bytes memory _short
+    ) public pure returns (bool) {
+        if (_short.length > _long.length) {
+            return false;
+        }
+
+        for (uint i = 0; i <= _long.length - _short.length; i++) {
+            bool found = true;
+            for (uint j = 0; j < _short.length; j++) {
+                if (_long[i + j] != _short[j]) {
+                    found = false;
+                    break;
+                }
+            }
+            if (found) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
