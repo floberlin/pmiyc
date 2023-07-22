@@ -9,6 +9,8 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useForm } from "react-hook-form";
+import { usePrepareContractWrite, useContractWrite } from "wagmi";
+import zkpaymasterFactory from "../utils/zkpaymasterFactory.json";
 
 const Home: NextPage = () => {
   const {
@@ -16,6 +18,15 @@ const Home: NextPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const { config } = usePrepareContractWrite({
+    address: "0xD27a60fccBd9d2A3F81fbC88d28DE47209d55640",
+    abi: zkpaymasterFactory.abi,
+    functionName: "create",
+  });
+
+  const { write } = useContractWrite(config);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -50,7 +61,7 @@ const Home: NextPage = () => {
           </div>
           <div>
             <label
-              htmlFor="groupID"
+              htmlFor="groupid"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
               Simso groupID
@@ -58,8 +69,8 @@ const Home: NextPage = () => {
             <div className="mt-2">
               <input
                 {...register("groupid")}
-                name="groupID"
-                id="groupID"
+                name="groupid"
+                id="groupid"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 placeholder="sismo-group-id"
               />
