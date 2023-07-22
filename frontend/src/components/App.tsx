@@ -222,12 +222,6 @@ export default function App() {
           </div>
         </div>
       )}
-      <br />
-      {/* <div className={styles.linkWrapper}>
-      <a href="https://docs.biconomy.io/introduction/overview" target="_blank" className={styles.readDocs}>
-  Click here to learn more about the Biconomy SDK
-    </a>
-    </div> */}
     </div>
   );
 }

@@ -130,9 +130,10 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
         data: swapTrx.data,
       };
 
-      const txResponse = await smartAccount.sendTransactionBatch({
-        transactions: [tx1, tx2],
-      });
+      const txResponse = await smartAccount.sendSignedUserOp
+      // .sendTransactionBatch({
+      //   transactions: [tx1, tx2],
+      // });
       const txHash = await txResponse.wait();
       console.log({ txHash });
       console.log({ txResponse });
