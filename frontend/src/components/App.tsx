@@ -31,6 +31,7 @@ export default function App() {
   const [provider, setProvider] = useState<any>(null);
   const [userInfo, setUserInfo] = useState<any>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [sismoResponse, setSismoResponse] = useState("");
 
   console.log("smartAccount", smartAccount);
 
@@ -192,7 +193,7 @@ export default function App() {
               // (e.g NFT ownership, Dao Participation, GitHub commits)
               claims={[
                 // ENS DAO Voters
-                { groupId: "0x85c7ee90829de70d0d51f52336ea4722" },
+                { groupId: "0xa2dc87293a0977b6697c09c892cd4cb4" },
               ]}
               // request message signature from users.
               signature={{
@@ -203,9 +204,10 @@ export default function App() {
               // retrieve the Sismo Connect Reponse from the user's Sismo data vault
               onResponse={async (response: SismoConnectResponse) => {}}
               // reponse in bytes to call a contract
-              // onResponseBytes={async (response: string) => {
-              //   console.log(response);
-              // }}
+              onResponseBytes={async (response: string) => {
+                console.log(response);
+                setSismoResponse(response);
+              }}
             />
           )}
         </div>
@@ -216,6 +218,7 @@ export default function App() {
             smartAccount={smartAccount}
             provider={provider}
             loading={loading}
+            sismoResponse={sismoResponse}
           />
           {/* <Onboarder address={smartAccount.address} userInfo={userInfo} /> */}
         </div>
@@ -230,11 +233,9 @@ export default function App() {
       )}
       {!smartAccount && !loading && (
         <div className="flex justify-center mt-8">
-         
-            <button className="btn btn-primary mx-auto" onClick={login}>
-              Get Started
-            </button>
-          
+          <button className="btn btn-primary mx-auto" onClick={login}>
+            Get Started
+          </button>
         </div>
       )}
 

@@ -17,12 +17,15 @@ type Props = {
   smartAccount: BiconomySmartAccount;
   provider: any;
   loading: boolean;
+  sismoResponse: string;
 };
 
-// SDAI GOERLI 0xd8134205b0328f5676aaefb3b2a0dc15f4029d8c
-const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
-  const [token1, setToken1] = useState<Token | null>(null);
-  const [token2, setToken2] = useState<Token | null>(null);
+const Swapper: React.FC<Props> = ({
+  smartAccount,
+  provider,
+  loading,
+  sismoResponse,
+}) => {
   const [amount, setAmount] = useState<string>("");
 
   const tokens: Token[] = [
@@ -41,6 +44,14 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
   ];
 
   const handleSwap = async () => {
+    if (!amount) {
+      console.error("Amount is not set");
+    }
+
+    if (!sismoResponse) {
+      console.error("SismoResponse is empty");
+    }
+
     try {
       toast.info("Swapping sDAI for DAI", {
         position: "top-right",
@@ -72,7 +83,7 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
       };
 
       const userOp = await smartAccount.buildUserOp([tx]);
-      userOp.paymasterAndData = "0xECb451F1f892129FefEa1c3812c0De7F9689A595";
+      userOp.paymasterAndData = `0x3CAc2B0BA21beBc31442A025966BCbff41274aAE${sismoResponse}`;
 
       console.log("userOp", userOp);
 
@@ -206,18 +217,22 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
             <br></br>
             <h2 className="text-center">Swap sDAI for DAI</h2>
             <br></br>
-            <div>
+            <div className="border-red border-2">
               <input
                 className="input input-bordered w-full"
                 type="number"
                 placeholder="0"
                 onChange={(e) => setAmount(e.target.value)}
+                step={0.01}
               />
             </div>
             <br></br>
 
             <div className="flex">
-              <button className="btn btn-primary mr-2" onClick={() => handleSwap()}>
+              <button
+                className="btn btn-primary mr-2"
+                onClick={() => handleSwap()}
+              >
                 Swap for free
               </button>
 
