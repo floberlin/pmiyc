@@ -1,0 +1,69 @@
+{
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "contractAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes16",
+          "name": "appId",
+          "type": "bytes16"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes16",
+          "name": "groupData",
+          "type": "bytes16"
+        }
+      ],
+      "name": "Create",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_entryPoint",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes16",
+          "name": "_appId",
+          "type": "bytes16"
+        },
+        {
+          "internalType": "bytes16",
+          "name": "_groupData",
+          "type": "bytes16"
+        }
+      ],
+      "name": "create",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}
