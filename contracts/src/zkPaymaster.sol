@@ -25,79 +25,27 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
         )
     {}
 
-    function verifySismoConnectResponse(bytes memory response) public {
+    function verifySismoConnectResponse(bytes memory response, address _userOpSender) public {
         // Recreate the request made in the fontend to verify the proof
         // We will verify the Sismo Connect Response containing the ZK Proofs against it
-        AuthRequest[] memory auths = new AuthRequest[](6);
-        auths[0] = _authRequestBuilder.build({authType: AuthType.VAULT});
-        auths[1] = _authRequestBuilder.build({authType: AuthType.EVM_ACCOUNT});
-        auths[2] = _authRequestBuilder.build({
+        AuthRequest[] memory auth = new AuthRequest;
+       
+        auth = _authRequestBuilder.build({
             authType: AuthType.EVM_ACCOUNT,
             userId: uint160(0xA4C94A6091545e40fc9c3E0982AEc8942E282F38)
         });
-        auths[3] = _authRequestBuilder.build({authType: AuthType.GITHUB});
-        auths[4] = _authRequestBuilder.build({
-            authType: AuthType.TWITTER,
-            userId: 295218901,
-            isOptional: true,
-            isSelectableByUser: false
+      
+        ClaimRequest memory claim = new ClaimRequest;
+        claim = _claimRequestBuilder.build({
+            groupId: 0xa2dc87293a0977b6697c09c892cd4cb4 // UNI Holders 
         });
-        auths[5] = _authRequestBuilder.build({
-            authType: AuthType.TELEGRAM,
-            userId: 875608110,
-            isOptional: true,
-            isSelectableByUser: false
-        });
-
-        ClaimRequest[] memory claims = new ClaimRequest[](7);
-        claims[0] = _claimRequestBuilder.build({
-            groupId: 0xda1c3726426d5639f4c6352c2c976b87
-        });
-        claims[1] = _claimRequestBuilder.build({
-            groupId: 0x85c7ee90829de70d0d51f52336ea4722,
-            claimType: ClaimType.GTE,
-            value: 4
-        });
-        claims[2] = _claimRequestBuilder.build({
-            groupId: 0xfae674b6cba3ff2f8ce2114defb200b1,
-            claimType: ClaimType.EQ,
-            value: 10
-        });
-        claims[3] = _claimRequestBuilder.build({
-            groupId: 0x1cde61966decb8600dfd0749bd371f12,
-            claimType: ClaimType.EQ,
-            value: 15,
-            isSelectableByUser: true,
-            isOptional: true
-        });
-        claims[4] = _claimRequestBuilder.build({
-            groupId: 0xfae674b6cba3ff2f8ce2114defb200b1,
-            claimType: ClaimType.GTE,
-            value: 6,
-            isSelectableByUser: true,
-            isOptional: true
-        });
-        claims[5] = _claimRequestBuilder.build({
-            groupId: 0x1cde61966decb8600dfd0749bd371f12,
-            claimType: ClaimType.EQ,
-            value: 15,
-            isSelectableByUser: true,
-            isOptional: true
-        });
-        claims[6] = _claimRequestBuilder.build({
-            groupId: 0xda1c3726426d5639f4c6352c2c976b87,
-            claimType: ClaimType.GTE,
-            value: 1,
-            isSelectableByUser: true,
-            isOptional: true
-        });
-
+       
         SismoConnectVerifiedResult memory result = verify({
             responseBytes: response,
             auths: auths,
-            claims: claims,
+            claims: claim,
             signature: _signatureBuilder.build({
-                message: abi.encode("I love Sismo!")
+                message: _userOpSender
             })
         });
 
@@ -127,15 +75,18 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
         bytes32 userOpHash,
         uint256 maxCost
     ) internal override returns (bytes memory context, uint256 validationData) {
-        bytes32 userData = bytes32(userOp.paymasterAndData[20:21]);
+
+
+        bytes32 sismoResponse = bytes32(userOp.paymasterAndData[20:21]);
 
         require(userData == 0, "not allowed, userData must be 0");
 
-        // check proof and proof needs to check if the opTX contains the samrt account address
+        // check proof and proof needs to check if the opTX contains the samrt account address //! TBD
 
-        // check that only sDAI transfers are allowed //? goerli sDAI: 0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C
+        verifySismoConnectResponse(sismoResponse, userOp.sender);
 
-        // check that userOp.callData includes 0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C
+
+        // check that userOp.callData includes 0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C //! DONE
 
         require(
             checkBytesIncluded(
