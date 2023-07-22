@@ -9,15 +9,20 @@ import { useState, useEffect, useRef } from "react";
 import SocialLogin from "@biconomy/web3-auth";
 import { ChainId } from "@biconomy/core-types";
 import { ethers } from "ethers";
-import SmartAccount from "@biconomy/smart-account";
 import Swapper from "./Swapper";
 import Spinner from "./Spinner";
 import Onboarder from "./Onboarder";
 import Image from "next/image";
 import Menu from "./Menu";
+import {
+  BiconomySmartAccount,
+  BiconomySmartAccountConfig,
+} from "@biconomy/account";
 
 export default function App() {
-  const [smartAccount, setSmartAccount] = useState<SmartAccount | null>(null);
+  const [smartAccount, setSmartAccount] = useState<BiconomySmartAccount | null>(
+    null
+  );
   const [interval, enableInterval] = useState(false);
   const sdkRef = useRef<SocialLogin | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -49,13 +54,13 @@ export default function App() {
     if (!sdkRef.current) {
       const socialLoginSDK = new SocialLogin();
       const signature1 = await socialLoginSDK.whitelistUrl(
-        "https://aaswap.vercel.app"
+        "http://127.0.0.1:3000/"
       );
       await socialLoginSDK.init({
-        chainId: ethers.utils.hexValue(ChainId.POLYGON_MAINNET).toString(),
-        network: "mainnet",
+        chainId: ethers.utils.hexValue(ChainId.GOERLI).toString(),
+        network: "testnet",
         whitelistUrls: {
-          "https://aaswap.vercel.app": signature1,
+          "http://127.0.0.1:3000/": signature1,
         },
       });
       sdkRef.current = socialLoginSDK;
@@ -69,41 +74,38 @@ export default function App() {
   }
 
   async function setupSmartAccount() {
-    if (!sdkRef?.current?.provider) {
-      setUserInfo(await sdkRef?.current?.getUserInfo());
-      console.log(userInfo);
-      return;
-    }
+    if (!sdkRef?.current?.provider) return;
     sdkRef.current.hideWallet();
     setLoading(true);
     const web3Provider = new ethers.providers.Web3Provider(
       sdkRef.current.provider
     );
     setProvider(web3Provider);
+
     try {
-      const smartAccount = new SmartAccount(web3Provider, {
-        activeNetworkId: ChainId.POLYGON_MAINNET,
-        supportedNetworksIds: [ChainId.POLYGON_MAINNET],
-        networkConfig: [
-          {
-            chainId: ChainId.POLYGON_MAINNET,
-            dappAPIKey: process.env.NEXT_PUBLIC_BICONOMY_API_KEY,
-          },
-        ],
-      });
-      const acct = await smartAccount.init();
-      console.log({
-        deployed: await smartAccount.isDeployed(ChainId.POLYGON_MAINNET),
-      });
-      const isDeployed = await smartAccount.isDeployed(ChainId.POLYGON_MAINNET);
-      if (isDeployed == false) {
-        console.log("this one needs to be deployed");
-        const deployTx = await smartAccount.deployWalletUsingPaymaster();
-        console.log(deployTx);
-      }
-      setSmartAccount(acct);
-      const info = await sdkRef.current.getUserInfo();
-      setUserInfo(info);
+      const biconomySmartAccountConfig: BiconomySmartAccountConfig = {
+        signer: web3Provider.getSigner(),
+        chainId: ChainId.GOERLI,
+        // bundler: bundler,
+        // paymaster: paymaster,
+      };
+      let biconomySmartAccount = new BiconomySmartAccount(
+        biconomySmartAccountConfig
+      );
+      biconomySmartAccount = await biconomySmartAccount.init();
+      console.log("owner: ", biconomySmartAccount.owner);
+      console.log(
+        "address: ",
+        await biconomySmartAccount.getSmartAccountAddress()
+      );
+      console.log(
+        "deployed: ",
+        await biconomySmartAccount.isAccountDeployed(
+          await biconomySmartAccount.getSmartAccountAddress()
+        )
+      );
+
+      setSmartAccount(biconomySmartAccount);
       setLoading(false);
     } catch (err) {
       console.log("error setting up smart account... ", err);
@@ -146,20 +148,7 @@ export default function App() {
               vault: {
                 // For development purposes insert the Data Sources that you want to impersonate here
                 // Never use this in production
-                impersonate: [
-                  // EVM
-                  "leo21.sismo.eth",
-                  "0xA4C94A6091545e40fc9c3E0982AEc8942E282F38",
-                  "0x1b9424ed517f7700e7368e34a9743295a225d889",
-                  "0x82fbed074f62386ed43bb816f748e8817bf46ff7",
-                  "0xc281bd4db5bf94f02a8525dca954db3895685700",
-                  // Github
-                  "github:leo21",
-                  // Twitter
-                  "twitter:leo21_eth",
-                  // Telegram
-                  "telegram:leo21",
-                ],
+                impersonate: [],
               },
               // displayRawResponse: true,
             }}
@@ -173,16 +162,12 @@ export default function App() {
             ]}
             // request message signature from users.
             signature={{
-              message: (smartAccount as SmartAccount).address.toString(),
+              message: (
+                smartAccount as BiconomySmartAccount
+              )?.address?.toString(),
             }}
             // retrieve the Sismo Connect Reponse from the user's Sismo data vault
-            onResponse={async (response: SismoConnectResponse) => {
-              const res = await fetch("/api/verify", {
-                method: "POST",
-                body: JSON.stringify(response),
-              });
-              console.log(await res.json());
-            }}
+            onResponse={async (response: SismoConnectResponse) => {}}
             // reponse in bytes to call a contract
             // onResponseBytes={async (response: string) => {
             //   console.log(response);
@@ -194,13 +179,13 @@ export default function App() {
             Connect and start staking
           </h1>
           <p>
-            Swap USDC and WETH and sample the onboarding power of Account
+            Swap SDAI and WETH and sample the onboarding power of Account
             Abstraction
           </p>
         </div>
         {!!smartAccount && (
           <button className={styles.account} onClick={() => setIsOpen(true)}>
-            {truncateAddress(smartAccount.address)}
+            {truncateAddress(smartAccount?.address)}
           </button>
         )}
         {!smartAccount && !loading && (
