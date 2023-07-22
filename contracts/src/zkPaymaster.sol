@@ -8,22 +8,27 @@ import "sismo-zk/SismoConnectLib.sol";
 
 contract ZKPaymaster is BasePaymaster, SismoConnect {
     // zkPaymaster app id
-    bytes16 private _appId = 0x45792cd187672019da6ee08aef36eb46;
+    //bytes16 private _appId;
     // allow impersonation
     bool private _isImpersonationMode = true;
+    bytes16 private _groupId;
 
     constructor(
-        IEntryPoint _entryPoint
+        IEntryPoint _entryPoint,
+        bytes16 appId_,
+        bytes16 groupData_
     )
         BasePaymaster(_entryPoint)
         // use buildConfig helper to easily build a Sismo Connect config in Solidity
         SismoConnect(
             buildConfig({
-                appId: _appId,
+                appId: appId_,
                 isImpersonationMode: _isImpersonationMode
             })
         )
-    {}
+    {
+        _groupId = groupData_;
+    }
 
     function verifySismoConnectResponse(
         bytes memory response,
@@ -47,7 +52,7 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
             responseBytes: response,
             auth: buildAuth({authType: AuthType.VAULT}),
             claim: buildClaim({
-                groupId: 0xa2dc87293a0977b6697c09c892cd4cb4 // UNI Holders
+                groupId: _groupId // UNI Holders
             }),
              signature: _signatureBuilder.build({
                 message: abi.encode(_userOpSender)
