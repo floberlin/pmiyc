@@ -123,60 +123,32 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"
+        theme="light"
       />
-      <div className={styles.swapContainer}>
-        {!loading && (
-          <>
-            <h2>Swap</h2>
-            <div className={styles.inputGroup}>
+
+      {!loading && (
+        <>
+          <br></br>
+          <div className="card card-bordered w-96 bg-base-100 shadow-xl p-6 mt-4">
+            <br></br>
+            <h2 className="text-center">Swap sDAI for DAI</h2>
+            <br></br>
+            <div>
               <input
-                className={styles.input}
+                className="input input-bordered w-full"
                 type="number"
                 placeholder="0"
                 onChange={(e) => setAmount(e.target.value)}
               />
             </div>
-            <div className={styles.imageWrapper}>
-              <Image
-                src="https://phoenix-labs.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F7c6b83cf-fa97-46bd-a42c-3e7a59d6beb6%2Fsdai.png?table=block&id=45446b7c-3117-4897-935b-f097b64331de&spaceId=157c7673-6b8d-4489-8b6a-1c900de03f9a&width=250&userId=&cache=v2"
-                width={50}
-                height={50}
-                alt="Picture of the author"
-                className={styles.imageItem}
-              />
+            <br></br>
 
-              <svg
-                className={styles.imageItem}
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#5D6785"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <polyline points="19 12 12 19 5 12"></polyline>
-              </svg>
-
-              <Image
-                // src="https://logos.covalenthq.com/tokens/1/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png"
-                src="https://logos.covalenthq.com/tokens/1/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png"
-                width={50}
-                height={50}
-                alt="Picture of the author"
-                className={styles.imageItem}
-              />
-            </div>
             <button className="btn btn-primary" onClick={() => handleSwap()}>
-              Swap
+              Swap for free
             </button>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

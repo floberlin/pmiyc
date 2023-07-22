@@ -11,7 +11,8 @@ const Index = () => {
 
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<span className="loading loading-ring"></span>
+}>
         <AppDynamic />
       </Suspense>
     </>
