@@ -18,11 +18,8 @@ import {
   BiconomySmartAccount,
   BiconomySmartAccountConfig,
 } from "@biconomy/account";
-<<<<<<< HEAD
-import Link from "next/link";
-=======
 import { IBundler, Bundler } from "@biconomy/bundler";
->>>>>>> f4f1482af1318867064d21b0fc969c86b641aa3d
+import Link from "next/link";
 
 export default function App() {
   const [smartAccount, setSmartAccount] = useState<BiconomySmartAccount | null>(
