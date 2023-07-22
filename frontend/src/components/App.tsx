@@ -18,6 +18,7 @@ import {
   BiconomySmartAccount,
   BiconomySmartAccountConfig,
 } from "@biconomy/account";
+import Link from "next/link";
 
 export default function App() {
   const [smartAccount, setSmartAccount] = useState<BiconomySmartAccount | null>(
@@ -133,68 +134,71 @@ export default function App() {
         userInfo={userInfo}
         smartAccount={smartAccount}
       />
-      <div className={styles.nav}>
-        <Image
-          src="/logo.png"
-          width={75}
-          height={75}
-          alt="Picture of the author"
-          className={styles.imageItem}
-        />
-        {!!smartAccount && (
-          <SismoConnectButton
-            config={{
-              appId: "0x45792cd187672019da6ee08aef36eb46", // replace with your appId
-              vault: {
-                // For development purposes insert the Data Sources that you want to impersonate here
-                // Never use this in production
-                impersonate: [],
-              },
-              // displayRawResponse: true,
-            }}
-            // request proof of Data Sources ownership (e.g EVM, GitHub, twitter or telegram)
-            auths={[{ authType: AuthType.VAULT }]}
-            // request zk proof that Data Source are part of a group
-            // (e.g NFT ownership, Dao Participation, GitHub commits)
-            claims={[
-              // ENS DAO Voters
-              { groupId: "0x85c7ee90829de70d0d51f52336ea4722" },
-            ]}
-            // request message signature from users.
-            signature={{
-              message: (
-                smartAccount as BiconomySmartAccount
-              )?.address?.toString(),
-            }}
-            // retrieve the Sismo Connect Reponse from the user's Sismo data vault
-            onResponse={async (response: SismoConnectResponse) => {}}
-            // reponse in bytes to call a contract
-            // onResponseBytes={async (response: string) => {
-            //   console.log(response);
-            // }}
-          />
-        )}
-        <div className={styles.header}>
-          <h1 className="text-3xl text-white font-bold underline">
-            Connect and start staking
-          </h1>
-          <p>
-            Swap SDAI and WETH and sample the onboarding power of Account
-            Abstraction
-          </p>
+        <div className="navbar bg-base-100">
+          <div className="navbar-start">
+            {!!smartAccount && (
+              <SismoConnectButton
+                config={{
+                  appId: "0x45792cd187672019da6ee08aef36eb46", // replace with your appId
+                  vault: {
+                    // For development purposes insert the Data Sources that you want to impersonate here
+                    // Never use this in production
+                    impersonate: [],
+                  },
+                  // displayRawResponse: true,
+                }}
+                // request proof of Data Sources ownership (e.g EVM, GitHub, twitter or telegram)
+                auths={[{ authType: AuthType.VAULT }]}
+                // request zk proof that Data Source are part of a group
+                // (e.g NFT ownership, Dao Participation, GitHub commits)
+                claims={[
+                  // ENS DAO Voters
+                  { groupId: "0x85c7ee90829de70d0d51f52336ea4722" },
+                ]}
+                // request message signature from users.
+                signature={{
+                  message: (
+                    smartAccount as BiconomySmartAccount
+                  )?.address?.toString(),
+                }}
+                // retrieve the Sismo Connect Reponse from the user's Sismo data vault
+                onResponse={async (response: SismoConnectResponse) => {}}
+                // reponse in bytes to call a contract
+                // onResponseBytes={async (response: string) => {
+                //   console.log(response);
+                // }}
+              />
+            )}
+          </div>
+          <div className="navbar-center">
+            <Image
+              src="/logoZK.png"
+              width={125}
+              height={25}
+              className={styles.imageItem}
+            />
+          </div>
+          <div className="navbar-end">
+            <Link className="btn btn-ghost btn-circle btn-lg" href="/factory">
+              🛠️
+            </Link>
+
+            {!!smartAccount && (
+              <button
+                className="btn btn-primary"
+                onClick={() => setIsOpen(true)}
+              >
+                {truncateAddress(smartAccount?.address)}
+              </button>
+            )}
+            {!smartAccount && !loading && (
+              <button className="btn btn-primary" onClick={login}>
+                Connect
+              </button>
+            )}
+            {loading && <p>Loading...</p>}
+          </div>
         </div>
-        {!!smartAccount && (
-          <button className={styles.account} onClick={() => setIsOpen(true)}>
-            {truncateAddress(smartAccount?.address)}
-          </button>
-        )}
-        {!smartAccount && !loading && (
-          <button className={styles.logoutButon} onClick={login}>
-            Connect
-          </button>
-        )}
-        {loading && <p>Loading...</p>}
-      </div>
       {!!smartAccount && (
         <div className={styles.buttonWrapper}>
           <Swapper
@@ -216,7 +220,7 @@ export default function App() {
       {!smartAccount && !loading && (
         <div className={styles.loader}>
           <div className={styles.loadContent}>
-            <button className={styles.bigButton} onClick={login}>
+            <button className="btn btn-primary" onClick={login}>
               Connect and Swap
             </button>
           </div>

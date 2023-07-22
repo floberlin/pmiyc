@@ -55,7 +55,7 @@ const OffCanvasMenu: React.FC<Props> = ({ isOpen, setIsOpen, logout, address, us
   return (
     <div>
       <div className={`${styles.menu} ${isOpen ? styles.open : ''}`}>
-      <button className={styles.close} onClick={handleToggle}>
+      <button className="btn btn-primary" onClick={handleToggle}>
         X
       </button>
         <ul>
@@ -75,7 +75,7 @@ const OffCanvasMenu: React.FC<Props> = ({ isOpen, setIsOpen, logout, address, us
           })}
       </div>
       <Onboarder address={address} userInfo={userInfo} />
-      <button className={styles.logoutButon} onClick={logout}>Logout</button>
+      <button className="btn btn-primary" onClick={logout}>Logout</button>
           {/* Add more menu items as needed */}
         </ul>
       </div>

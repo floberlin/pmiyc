@@ -94,6 +94,7 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
       const tx = {
         to: sparkAddress,
         data: sparkContract.interface.encodeFunctionData("redeem", params),
+        value: 0,
       };
 
       console.log("22222222")
@@ -190,7 +191,7 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
                 className={styles.imageItem}
               />
             </div>
-            <button className={styles.swapButton} onClick={() => handleSwap()}>
+            <button className="btn btn-primary" onClick={() => handleSwap()}>
               Swap
             </button>
           </>

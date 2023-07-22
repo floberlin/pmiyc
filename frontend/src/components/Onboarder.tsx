@@ -16,7 +16,7 @@ const transak = new Transak('PRODUCTION', {
 });
 return(
   <div className={styles.logoutButtonWrapper}>
-    <button className={styles.logoutButon}  onClick={() => transak.init()}>Buy DAI on Goerli</button>
+    <button className="btn btn-primary"  onClick={() => transak.init()}>Buy DAI on Goerli</button>
       </div>
 )
 }

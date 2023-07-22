@@ -3,7 +3,7 @@ import styles from "../styles/Spinner.module.css"
 // really cool css spinner from https://loading.io/css/
 const Spinner = () => {
   return( 
-    <div className={styles.spinner}><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    <span className="loading loading-ring loading-lg"></span>
   )
 }
 
