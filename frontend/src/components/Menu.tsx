@@ -34,7 +34,7 @@ const OffCanvasMenu: React.FC<Props> = ({ isOpen, setIsOpen, logout, address, us
   const getBalances = async () => {
     const balanceParams =
       {
-        chainId: ChainId.POLYGON_MAINNET, // chainId of your choice
+        chainId: ChainId.GOERLI, // chainId of your choice
         eoaAddress: smartAccount?.address || '',
         tokenAddresses: [], 
       };
