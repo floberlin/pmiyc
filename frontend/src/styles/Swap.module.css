@@ -1,0 +1,59 @@
+/* Swap.module.css */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swapContainer {
+  margin-top: 5%;
+  background: rgb(13, 17, 28);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border:1px solid rgba(152, 161, 192, 0.24);
+  width: 30%;
+}
+
+.inputGroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.swapButton {
+  background: #1e90ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  width: 100%;
+}
+
+.swapButton:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.input {
+  background-color: rgb(41, 50, 73);
+  border: none;
+  outline: none;
+  min-height: 50px;
+  font-size: 30px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.imageWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.imageItem {
+  margin-bottom: 15px;
+}
