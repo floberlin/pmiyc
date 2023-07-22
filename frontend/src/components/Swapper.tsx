@@ -58,7 +58,7 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
 
   const handleSwap = async () => {
     try {
-      toast.info("Swapping SDAI for USDC", {
+      toast.info("Swapping sDAI for DAI", {
         position: "top-right",
         autoClose: 15000,
         hideProgressBar: false,
@@ -69,7 +69,7 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
         theme: "dark",
       });
 
-      const sparkAddress = "";
+      const sparkAddress = "0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C";
 
       const sparkContract = new ethers.Contract(sparkAddress, sparkApi);
 
@@ -80,24 +80,22 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
       );
 
       const abi = ethers.utils.defaultAbiCoder;
-      const params = abi.encode(
+      const params:any = abi.encode(
         ["uint256", "address", "address"], // encode as address array
         [amountIn, smartAccount.address, smartAccount.address]
       );
 
-      const rawTx = sparkContract.populateTransaction["redeem"][params];
-
-      // redeem(<amount>, msg.sender, msg.sender)
-      const data = {};
-      const transaction = {
-        to: "0x2de614ceD6C8B929b9968342d11e61648373B19c",
-        data: rawTx,
-        value: "0",
+      const tx = {
+        to: sparkAddress,
+        data: sparkContract.interface.encodeFunctionData("redeem", params),
       };
 
-      const userOp = await smartAccount.buildUserOp([transaction]);
-      const paymasterAddress = "0x2647d39d50bd604d5bacf7504cf648135d450e14";
-      userOp.paymasterAndData = ethers.utils.toUtf8Bytes(`${paymasterAddress}`);
+      const userOp = await smartAccount.buildUserOp([tx]);
+      //const paymasterAddress = "0x2647d39d50bd604d5bacf7504cf648135d450e14";
+      //userOp.paymasterAndData = ethers.utils.toUtf8Bytes(`${paymasterAddress}`);
+      userOp.paymasterAndData = "0x2647D39D50Bd604d5bacF7504cf648135D450E14";
+
+      console.log("hellooooo");
 
       const txResponse = await smartAccount.sendUserOp(userOp);
 

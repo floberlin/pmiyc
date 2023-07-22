@@ -64,7 +64,7 @@ const OffCanvasMenu: React.FC<Props> = ({ isOpen, setIsOpen, logout, address, us
           <li>Balance: {usdBlance}</li>
           <div className={styles.logoutButtonWrapper}>
           {tokenBalances?.map((tok:any, i:any) => {
-            if (tok.contract_ticker_symbol == "USDC") {
+            if (tok.contract_ticker_symbol == "DAI") {
               return (
                 <li key={i}>{tok.contract_ticker_symbol} : {parseInt(tok.balance) / 10**6}</li>
               )
