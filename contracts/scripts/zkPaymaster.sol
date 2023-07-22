@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 
 import "forge-std/Script.sol";
 
-contract Erc721GatedPaymasterScript is Script {
+contract ZKPaymasterScript is Script {
     function setUp() public {}
 
     function run() public {

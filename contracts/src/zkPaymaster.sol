@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+pragma solidity =0.8.20;
 
 import {BasePaymaster} from "account-abstraction/core/BasePaymaster.sol";
 import {IEntryPoint} from "account-abstraction/interfaces/IEntryPoint.sol";
 import {UserOperation} from "account-abstraction/interfaces/UserOperation.sol";
 
-contract Erc721GatedPaymaster is BasePaymaster {
+contract ZKPaymaster is BasePaymaster {
     constructor(IEntryPoint _entryPoint) BasePaymaster(_entryPoint) {}
 
     function _validatePaymasterUserOp(
