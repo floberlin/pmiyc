@@ -1,9 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
-    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
+  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -87,7 +91,13 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: radial-gradient(100% 100% at 50% 0%, rgba(130, 71, 229, 0.2) 0%, rgba(200, 168, 255, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), rgb(13, 14, 14);;
+  background: radial-gradient(
+      100% 100% at 50% 0%,
+      rgba(130, 71, 229, 0.2) 0%,
+      rgba(200, 168, 255, 0.05) 52.6%,
+      rgba(0, 0, 0, 0) 100%
+    ),
+    rgb(13, 14, 14);
   background-repeat: no-repeat;
   width: 100vw;
   height: 100vh;
