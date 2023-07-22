@@ -14,7 +14,7 @@ echo "Please enter the contract address of the entrypoint..."
 read entrypoint
 echo "Deploying zkPaymaster..."
 
-forge create ./src/zkPaymaster.sol:zkPaymaster -i --rpc-url 'https://polygon-mumbai.g.alchemy.com/v2/'${ALCHEMY_KEY} --private-key ${PRIVATE_KEY} --constructor-args ${entrypoint} --verify -e ${POLYGONSCAN_KEY}
+forge create ./src/zkPaymaster.sol:zkPaymaster -i --rpc-url https://goerli.infura.io/v3/1a29950df3df4a7390639008d5d67c79 --private-key ${PRIVATE_KEY} --constructor-args "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789" --verify -e "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW"
 
 # Please enter the contract address of the entrypoint...
 # 0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789

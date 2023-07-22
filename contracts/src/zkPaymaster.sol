@@ -25,49 +25,37 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
         )
     {}
 
-    function verifySismoConnectResponse(bytes memory response, address _userOpSender) public {
+    function verifySismoConnectResponse(
+        bytes memory response,
+        address _userOpSender
+    ) public returns (bool) {
         // Recreate the request made in the fontend to verify the proof
         // We will verify the Sismo Connect Response containing the ZK Proofs against it
-        AuthRequest[] memory auth = new AuthRequest;
-       
-        auth = _authRequestBuilder.build({
-            authType: AuthType.EVM_ACCOUNT,
-            userId: uint160(0xA4C94A6091545e40fc9c3E0982AEc8942E282F38)
-        });
-      
-        ClaimRequest memory claim = new ClaimRequest;
-        claim = _claimRequestBuilder.build({
-            groupId: 0xa2dc87293a0977b6697c09c892cd4cb4 // UNI Holders 
-        });
-       
+        // AuthRequest[] memory auth = new AuthRequest[](1);
+
+        // auth = _authRequestBuilder.build({
+        //     authType: AuthType.EVM_ACCOUNT,
+        //     userId: uint160(0xA4C94A6091545e40fc9c3E0982AEc8942E282F38)
+        // });
+
+        // ClaimRequest memory claim = new ClaimRequest[](1);
+        // claim = _claimRequestBuilder.build({
+        //     groupId: 0xa2dc87293a0977b6697c09c892cd4cb4 // UNI Holders
+        // });
+
         SismoConnectVerifiedResult memory result = verify({
             responseBytes: response,
-            auths: auths,
-            claims: claim,
-            signature: _signatureBuilder.build({
-                message: _userOpSender
+            auth: buildAuth({authType: AuthType.VAULT}),
+            claim: buildClaim({
+                groupId: 0xa2dc87293a0977b6697c09c892cd4cb4 // UNI Holders
+            }),
+             signature: _signatureBuilder.build({
+                message: abi.encode(_userOpSender)
             })
+            // signature: buildSignature({message: _userOpSender})
         });
 
-        uint256 vaultId = SismoConnectHelper.getUserId(result, AuthType.VAULT);
-        uint256 githubId = SismoConnectHelper.getUserId(
-            result,
-            AuthType.GITHUB
-        );
-        uint256 telegramId = SismoConnectHelper.getUserId(
-            result,
-            AuthType.TELEGRAM
-        );
-        uint256[] memory evmAccountIds = SismoConnectHelper.getUserIds(
-            result,
-            AuthType.EVM_ACCOUNT
-        );
-
-        // console.log("Vault ID: %s", vaultId);
-        // console.log("Github ID: %s", githubId);
-        // console.log("Telegram ID: %s", telegramId);
-        // console.log("First EVM Account ID: %s", evmAccountIds[0]);
-        // console.log("Second EVM Account ID: %s", evmAccountIds[1]);
+        return true;
     }
 
     function _validatePaymasterUserOp(
@@ -75,28 +63,27 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
         bytes32 userOpHash,
         uint256 maxCost
     ) internal override returns (bytes memory context, uint256 validationData) {
+        bytes memory sismoResponse = bytes(userOp.paymasterAndData[20:5790]);
 
-
-        bytes32 sismoResponse = bytes32(userOp.paymasterAndData[20:21]);
-
-        require(userData == 0, "not allowed, userData must be 0");
+        // require(userData == 0, "not allowed, userData must be 0");
 
         // check proof and proof needs to check if the opTX contains the samrt account address //! TBD
 
-        verifySismoConnectResponse(sismoResponse, userOp.sender);
-
+        require(
+            verifySismoConnectResponse(sismoResponse, userOp.sender),
+            "You need to hold UNI to use this paymaster"
+        );
 
         // check that userOp.callData includes 0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C //! DONE
 
         require(
             checkBytesIncluded(
                 userOp.callData,
-                hex'D8134205b0328F5676aaeFb3B2a0DC15f4029d8C'
-            ),
+                hex"D8134205b0328F5676aaeFb3B2a0DC15f4029d8C"
+            ) || userOp.nonce == 0,
             "not allowed, only sDAI transfers are allowed"
         );
     }
-
 
     // function simply checks if a short byte array is included in a long byte array
     // in our case we check if the sDAI address is included in the callData
