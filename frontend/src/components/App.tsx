@@ -61,6 +61,7 @@ export default function App() {
         network: "testnet",
         whitelistUrls: {
           "http://127.0.0.1:3000/": signature1,
+          "https://zkpaymaster.vercel.app/": signature1,
         },
       });
       sdkRef.current = socialLoginSDK;
@@ -202,6 +203,9 @@ export default function App() {
                 console.log("sismoResponse", response);
                 setSismoResponse(response);
               }}
+              text={
+                sismoResponse === "" ? "Sismo Settings" : "Sign in with Sismo"
+              }
             />
           )}
         </div>
