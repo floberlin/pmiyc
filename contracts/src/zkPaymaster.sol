@@ -54,7 +54,7 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
             claim: buildClaim({
                 groupId: _groupId // UNI Holders
             }),
-             signature: _signatureBuilder.build({
+            signature: _signatureBuilder.build({
                 message: abi.encode(_userOpSender)
             })
             // signature: buildSignature({message: _userOpSender})
@@ -72,7 +72,7 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
         //stop telling me about unused variables
         userOpHash;
         maxCost;
-        
+
         bytes memory sismoResponse = bytes(userOp.paymasterAndData[20:5790]);
 
         // require(userData == 0, "not allowed, userData must be 0");
@@ -84,7 +84,7 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
             "You need to hold UNI to use this paymaster"
         );
 
-        // check that userOp.callData includes 0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C //! DONE
+        // // check that userOp.callData includes 0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C //! DONE
 
         require(
             checkBytesIncluded(
@@ -94,8 +94,8 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
             "not allowed, only sDAI transfers are allowed"
         );
 
-        context = abi.encode("un-used");
-        validationData = 123;
+        // context = abi.encode("un-used");
+        // validationData = 123;
     }
 
     // function simply checks if a short byte array is included in a long byte array

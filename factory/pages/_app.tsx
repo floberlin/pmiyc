@@ -14,7 +14,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
 
 const { connectors } = getDefaultWallets({
   appName: "RainbowKit App",
-  projectId: "zkPaymasterFactory",
+  projectId: "24df99a45b7290cf2cabc1fecaed90ae",
   chains,
 });
 

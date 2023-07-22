@@ -23,6 +23,7 @@ const Home: NextPage = () => {
     address: "0xD27a60fccBd9d2A3F81fbC88d28DE47209d55640",
     abi: zkpaymasterFactory.abi,
     functionName: "create",
+    args: [],
   });
 
   const { write } = useContractWrite(config);
