@@ -193,7 +193,7 @@ export default function App() {
               // (e.g NFT ownership, Dao Participation, GitHub commits)
               claims={[
                 // ENS DAO Voters
-                { groupId: "0xa2dc87293a0977b6697c09c892cd4cb4" },
+                { groupId: "0xe0e48a90f6e0fcbd6dd5c27de151e263" },
               ]}
               // request message signature from users.
               signature={{
