@@ -60,6 +60,7 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
             // signature: buildSignature({message: _userOpSender})
         });
 
+        result; //shutup about the unused stuff
         return true;
     }
 
@@ -68,6 +69,10 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
         bytes32 userOpHash,
         uint256 maxCost
     ) internal override returns (bytes memory context, uint256 validationData) {
+        //stop telling me about unused variables
+        userOpHash;
+        maxCost;
+        
         bytes memory sismoResponse = bytes(userOp.paymasterAndData[20:5790]);
 
         // require(userData == 0, "not allowed, userData must be 0");
@@ -88,6 +93,9 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
             ) || userOp.nonce == 0,
             "not allowed, only sDAI transfers are allowed"
         );
+
+        context = abi.encode("un-used");
+        validationData = 123;
     }
 
     // function simply checks if a short byte array is included in a long byte array

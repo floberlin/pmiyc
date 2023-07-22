@@ -10,6 +10,13 @@ import "./zkPaymaster.sol";
 
 contract ZKPaymasterFactory {
 
+    event Create(
+        address indexed contractAddress,
+        address owner,
+        bytes16 appId,
+        bytes16 groupData
+    );
+
     function create(
         address _entryPoint,
         address _owner,
@@ -30,6 +37,8 @@ contract ZKPaymasterFactory {
         );
         
         newPaymaster.transferOwnership(_owner);
+
+        emit Create(address(newPaymaster), _owner, _appId, _groupData);
         
         return (address(newPaymaster));
     }
