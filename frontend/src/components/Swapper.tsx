@@ -1,15 +1,10 @@
-// Swap.tsx
+import { BiconomySmartAccount } from "@biconomy/account";
+import { ethers } from "ethers";
 import React, { useState } from "react";
-import styles from "../styles/Swap.module.css";
-import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Transaction, ethers } from "ethers";
-import erc20Abi from "../utils/erc20abi.json";
+import styles from "../styles/Swap.module.css";
 import sparkApi from "../utils/sparkabi.json";
-import { BiconomySmartAccount } from "@biconomy/account";
-import { getPoolImmutables, getPoolState } from "../utils/helpers";
-import { ChainId } from "@biconomy/core-types";
 
 type Token = {
   name: string;
@@ -62,7 +57,6 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
 
       const sparkContract = new ethers.Contract(sparkAddress, sparkApi);
 
-      // .001 => 1 000 000 000 000 000
       const amountIn: any = ethers.utils.parseUnits(
         amount.toString(),
         tokens[0].decimals
@@ -72,43 +66,122 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
         to: sparkAddress,
         data: sparkContract.interface.encodeFunctionData("redeem", [
           amountIn,
-          smartAccount.address,
-          smartAccount.address,
+          smartAccount?.address,
+          smartAccount?.address,
         ]),
       };
 
       const userOp = await smartAccount.buildUserOp([tx]);
-      //const paymasterAddress = "0x2647d39d50bd604d5bacf7504cf648135d450e14";
-      //userOp.paymasterAndData = ethers.utils.toUtf8Bytes(`${paymasterAddress}`);
-      userOp.paymasterAndData = "0x2647D39D50Bd604d5bacF7504cf648135D450E14";
+      userOp.paymasterAndData = "0xECb451F1f892129FefEa1c3812c0De7F9689A595";
 
-      try {
-        const txResponse = await smartAccount.sendUserOp(userOp);
-        console.log({ txResponse });
-      } catch (error) {
-        console.log("catch");
-        console.log(error);
+      console.log("userOp", userOp);
+
+      const txResponse = await smartAccount.sendUserOp(userOp);
+      console.log({ txResponse });
+
+      const txHash = await txResponse.wait();
+      console.log({ txHash });
+
+      const txLink = `https://goerli.etherscan.com/tx/${txHash?.receipt?.transactionHash}`;
+      if (txHash?.receipt?.transactionHash) {
+        toast.success(
+          <a href={txLink} target="_blank">
+            Success! Click here for your transaction!
+          </a>,
+          {
+            position: "top-right",
+            autoClose: 15000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
       }
+    } catch (error: any) {
+      console.log("catch");
+      console.log(error);
 
-      // const txHash = await txResponse.wait();
-      // console.log({ txHash });
-      const txLink = `https://goerli.etherscan.com/tx/${txHash.transactionHash}`;
-      toast.success(
-        <a href={txLink} target="_blank">
-          Success! Click here for your transaction!
-        </a>,
-        {
-          position: "top-right",
-          autoClose: 15000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        }
-      );
-    } catch (error) {}
+      toast.error(`Error! ${error?.message}`, {
+        position: "top-right",
+        autoClose: 15000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+
+  const handleTxWithoutProof = async () => {
+    try {
+      toast.info("Sending unsupported Tx", {
+        position: "top-right",
+        autoClose: 15000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
+      const amountIn: any = ethers.utils.parseUnits(amount.toString(), 18);
+
+      const tx = {
+        to: "0x4bFC74983D6338D3395A00118546614bB78472c2",
+        data: "0x",
+        value: amountIn,
+      };
+
+      const userOp = await smartAccount.buildUserOp([tx]);
+      userOp.paymasterAndData = "0xECb451F1f892129FefEa1c3812c0De7F9689A595";
+
+      console.log("userOp", userOp);
+
+      const txResponse = await smartAccount.sendUserOp(userOp);
+      console.log({ txResponse });
+
+      const txHash = await txResponse.wait();
+      console.log({ txHash });
+
+      const txLink = `https://goerli.etherscan.com/tx/${txHash?.receipt?.transactionHash}`;
+      if (txHash?.receipt?.transactionHash) {
+        toast.success(
+          <a href={txLink} target="_blank">
+            Success! Click here for your transaction!
+          </a>,
+          {
+            position: "top-right",
+            autoClose: 15000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
+      }
+    } catch (error: any) {
+      console.log("catch");
+      console.log(error);
+
+      toast.error(`Error! ${error?.message}`, {
+        position: "top-right",
+        autoClose: 15000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
   };
 
   return (
@@ -143,9 +216,18 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
             </div>
             <br></br>
 
-            <button className="btn btn-primary" onClick={() => handleSwap()}>
-              Swap for free
-            </button>
+            <div className="flex">
+              <button className="btn btn-primary mr-2" onClick={() => handleSwap()}>
+                Swap for free
+              </button>
+
+              <button
+                className="btn btn-outline ml-2"
+                onClick={() => handleTxWithoutProof()}
+              >
+                Tx without Proof
+              </button>
+            </div>
           </div>
         </>
       )}
@@ -154,5 +236,3 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
 };
 
 export default Swapper;
-
-// disabled={!(token1 && token2 && amount)}
