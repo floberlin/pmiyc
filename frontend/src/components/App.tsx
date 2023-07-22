@@ -18,6 +18,7 @@ import {
   BiconomySmartAccount,
   BiconomySmartAccountConfig,
 } from "@biconomy/account";
+import { IBundler, Bundler } from "@biconomy/bundler";
 
 export default function App() {
   const [smartAccount, setSmartAccount] = useState<BiconomySmartAccount | null>(
@@ -83,10 +84,16 @@ export default function App() {
     setProvider(web3Provider);
 
     try {
+      const bundler: IBundler = new Bundler({
+        bundlerUrl: "https://bundler.biconomy.io/api/v2/5/abc",
+        chainId: ChainId.GOERLI,
+        entryPointAddress: "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789",
+      });
+
       const biconomySmartAccountConfig: BiconomySmartAccountConfig = {
         signer: web3Provider.getSigner(),
         chainId: ChainId.GOERLI,
-        // bundler: bundler,
+        bundler: bundler,
         // paymaster: paymaster,
       };
       let biconomySmartAccount = new BiconomySmartAccount(
