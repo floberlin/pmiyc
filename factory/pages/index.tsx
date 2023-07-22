@@ -8,8 +8,12 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { useForm } from "react-hook-form";
-import { usePrepareContractWrite, useContractWrite } from "wagmi";
+import { FieldValues, useForm } from "react-hook-form";
+import {
+  usePrepareContractWrite,
+  useContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
 import zkpaymasterFactory from "../utils/zkpaymasterFactory.json";
 
 const Home: NextPage = () => {
@@ -23,10 +27,25 @@ const Home: NextPage = () => {
     address: "0xD27a60fccBd9d2A3F81fbC88d28DE47209d55640",
     abi: zkpaymasterFactory.abi,
     functionName: "create",
-    args: [],
+    args: [
+      "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
+      "0x35E928fBAd7a404fbcffA51c85d2ccFd045663CB",
+      "0x45792cd187672019da6ee08aef36eb46",
+      "0xa2dc87293a0977b6697c09c892cd4cb4",
+    ],
   });
 
-  const { write } = useContractWrite(config);
+  const { data, write } = useContractWrite(config);
+
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
+
+  const deployFactory = (formData: any) => {
+    console.log(formData);
+
+    write?.();
+  };
 
   return (
     <div className={styles.container}>
@@ -42,7 +61,7 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <ConnectButton />
 
-        <form onSubmit={handleSubmit((data) => console.log(data))}>
+        <form onSubmit={handleSubmit((formData) => deployFactory(formData))}>
           <div>
             <label
               htmlFor="appid"
