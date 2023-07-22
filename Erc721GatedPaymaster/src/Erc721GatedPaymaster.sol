@@ -15,7 +15,7 @@ contract Erc721GatedPaymaster is BasePaymaster {
     ) internal override returns (bytes memory context, uint256 validationData) {
         bytes32 userData = bytes32(userOp.paymasterAndData[20:21]);
 
-        require(userData == 0, "not allowed, userData must be 1");
+        require(userData == 0, "not allowed, userData must be 0");
     }
 
     /**
