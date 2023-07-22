@@ -33,7 +33,7 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
   const tokens: Token[] = [
     {
       name: "SDAI",
-      symbol: "SDAI",
+      symbol: "sDAI",
       address: '"0xd8134205b0328f5676aaefb3b2a0dc15f4029d8c"',
       decimals: 6,
     },
@@ -71,6 +71,9 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
 
       const sparkAddress = "0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C";
 
+      const sig = provider.getSigner();
+
+
       const sparkContract = new ethers.Contract(sparkAddress, sparkApi);
 
       // .001 => 1 000 000 000 000 000
@@ -79,16 +82,22 @@ const Swapper: React.FC<Props> = ({ smartAccount, provider, loading }) => {
         tokens[0].decimals
       );
 
+
       const abi = ethers.utils.defaultAbiCoder;
       const params:any = abi.encode(
         ["uint256", "address", "address"], // encode as address array
         [amountIn, smartAccount.address, smartAccount.address]
       );
 
+      console.log("111111111")
+
       const tx = {
         to: sparkAddress,
         data: sparkContract.interface.encodeFunctionData("redeem", params),
       };
+
+      console.log("22222222")
+
 
       const userOp = await smartAccount.buildUserOp([tx]);
       //const paymasterAddress = "0x2647d39d50bd604d5bacf7504cf648135d450e14";
