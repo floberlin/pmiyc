@@ -1,6 +1,4 @@
-# pmiyc
-
-Pay me if you can - EthGlobal Paris 2023
+# zkPaymaster - EthGlobal Paris 2023
 
 ## Description
 
@@ -16,8 +14,8 @@ The foundation of our account abstraction system is built on Biconomy. The zero-
 
 While zkPaymaster is currently tailored to support the sDAI ecosystem as a way to reward MakerDAO holders, its framework is versatile and extendable. It can be adapted to any DAO or other provable constructs, thus laying the groundwork for a more interconnected and seamless decentralized ecosystem.
 
-We believe zkPaymaster will reshape the landscape of blockchain transactions, lowering barriers, enhancing utility, strengthening privacy, and democratizing access to decentralized financial services. Our project marks a significant step forward in the blockchain sphere, promising an efficient and cost-effective solution for users while fostering a more inclusive and interconnected DeFi landscape.
+We believe zkPaymaster will reshape the landscape of blockchain transactions, lowering barriers, enhancing utility, and democratizing access to decentralized financial services. Our project marks a significant step forward in the blockchain sphere, promising an efficient and cost-effective solution for users while fostering a more inclusive and interconnected DeFi landscape.
 
 ## How it's made
 
-The UI is built using Next.js and the Biconomy account abstraction packages. For the zk proof generation we are using Sismos' Vaults. The Paymaster is a 4337-complaint paymaster, which verifies the data given from Sismo.
+The UI is built using Next.js and the Biconomy account abstraction packages. We used all of the Biconomy packages expect the paymaster because we built that one ourself. For the zk proof generation we a using Sismos' Vaults. The Paymaster is a 4337-complaint paymaster, which verifies the data given from Sismo. Contracts were built in foundry and deployed to goerli.

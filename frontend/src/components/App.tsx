@@ -151,7 +151,7 @@ export default function App() {
           />
         </div>
         <div className="navbar-end">
-          <Link className="btn btn-ghost btn-circle btn-lg" href="/factory">
+          <Link className="btn btn-ghost btn-circle btn-lg" href="https://zkpfactory.vercel.app">
             🛠️
           </Link>
 

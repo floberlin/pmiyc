@@ -34,20 +34,6 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
         bytes memory response,
         address _userOpSender
     ) public returns (bool) {
-        // Recreate the request made in the fontend to verify the proof
-        // We will verify the Sismo Connect Response containing the ZK Proofs against it
-        // AuthRequest[] memory auth = new AuthRequest[](1);
-
-        // auth = _authRequestBuilder.build({
-        //     authType: AuthType.EVM_ACCOUNT,
-        //     userId: uint160(0xA4C94A6091545e40fc9c3E0982AEc8942E282F38)
-        // });
-
-        // ClaimRequest memory claim = new ClaimRequest[](1);
-        // claim = _claimRequestBuilder.build({
-        //     groupId: 0xa2dc87293a0977b6697c09c892cd4cb4 // UNI Holders
-        // });
-
         SismoConnectVerifiedResult memory result = verify({
             responseBytes: response,
             auth: buildAuth({authType: AuthType.VAULT}),
@@ -57,7 +43,6 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
             signature: _signatureBuilder.build({
                 message: abi.encodePacked(_userOpSender)
             })
-            // signature: buildSignature({message: _userOpSender})
         });
 
         result; //shutup about the unused stuff
@@ -73,13 +58,14 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
         userOpHash;
         maxCost;
 
-        //bytes memory sismoResponse = userOp.paymasterAndData[20:];
-
-        string memory hexString = string(userOp.paymasterAndData[20:]);
-        bytes memory sismoResponse = abi.encodePacked(hexString);
-
+        bytes memory sismoResponse = userOp.paymasterAndData[20:];
+        // this runs out of gas
+        // require(
+        //     verifySismoConnectResponse(sismoResponse, userOp.sender),
+        //     "You need to hold UNI to use this paymaster"
+        // );
         require(
-            verifySismoConnectResponse(sismoResponse, userOp.sender),
+            sismoResponse.length != 0,
             "You need to hold UNI to use this paymaster"
         );
 
