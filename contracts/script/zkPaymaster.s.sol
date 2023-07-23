@@ -16,7 +16,7 @@ contract ZKPaymasterScript is Script {
         vm.startBroadcast(deployerPrivateKey);
         zkPaymasterFactory = new ZKPaymasterFactory();
 
-        zkPaymaster = ZKPaymaster(zkPaymasterFactory.create(0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789, msg.sender, 0x45792cd187672019da6ee08aef36eb46, 0xa2dc87293a0977b6697c09c892cd4cb4));
+        zkPaymaster = ZKPaymaster(zkPaymasterFactory.create(0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789, msg.sender, 0x45792cd187672019da6ee08aef36eb46, 0xe0e48a90f6e0fcbd6dd5c27de151e263));
     
         vm.stopBroadcast();
     }

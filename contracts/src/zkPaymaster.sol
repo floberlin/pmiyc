@@ -10,7 +10,7 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
     // zkPaymaster app id
     //bytes16 private _appId;
     // allow impersonation
-    bool private _isImpersonationMode = true;
+    bool private _isImpersonationMode = false;
     bytes16 private _groupId;
 
     constructor(
@@ -55,7 +55,7 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
                 groupId: _groupId // UNI Holders
             }),
             signature: _signatureBuilder.build({
-                message: abi.encode(_userOpSender)
+                message: abi.encodePacked(_userOpSender)
             })
             // signature: buildSignature({message: _userOpSender})
         });
@@ -73,18 +73,15 @@ contract ZKPaymaster is BasePaymaster, SismoConnect {
         userOpHash;
         maxCost;
 
-        bytes memory sismoResponse = bytes(userOp.paymasterAndData[20:5790]);
+        //bytes memory sismoResponse = userOp.paymasterAndData[20:];
 
-        // require(userData == 0, "not allowed, userData must be 0");
-
-        // check proof and proof needs to check if the opTX contains the samrt account address //! TBD
+        string memory hexString = string(userOp.paymasterAndData[20:]);
+        bytes memory sismoResponse = abi.encodePacked(hexString);
 
         require(
             verifySismoConnectResponse(sismoResponse, userOp.sender),
             "You need to hold UNI to use this paymaster"
         );
-
-        // // check that userOp.callData includes 0xD8134205b0328F5676aaeFb3B2a0DC15f4029d8C //! DONE
 
         require(
             checkBytesIncluded(

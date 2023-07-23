@@ -17,6 +17,7 @@ import {
 } from "wagmi";
 import { useState } from "react";
 import zkpaymasterFactory from "../utils/zkpaymasterFactory.json";
+import Image from "next/image";
 
 const Home: NextPage = () => {
   const {
@@ -57,7 +58,7 @@ const Home: NextPage = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>RainbowKit App</title>
         <meta
@@ -66,108 +67,112 @@ const Home: NextPage = () => {
         />
         <link href="/favicon.ico" rel="icon" />
       </Head>
+      <div className="w-full flex items-center">
+        <Image src="/fac.png" width={155} height={25} className="mx-auto" />
+      </div>
+      <div className={styles.container}>
+        <main className={styles.main}>
+          <ConnectButton />
 
-      <main className={styles.main}>
-        <ConnectButton />
-
-        <form
-          onSubmit={handleSubmit((formData) => deployFactory(formData))}
-          className="w-2/3"
-        >
-          <div>
-            <a
-              className="underline"
-              href={`https://factory.sismo.io/apps-explorer`}
-            >
-              Link to Sismo
-            </a>
-          </div>
-          <div>
-            <label
-              htmlFor="appid"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Sismo AppID
-            </label>
-            <div className="mt-2">
-              <input
-                {...register("appid")}
-                name="appid"
-                id="appid"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="0x45792cd187672019da6ee08aef36eb46"
-              />
-            </div>
-          </div>
-          <div>
-            <label
-              htmlFor="groupid"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Simso groupID
-            </label>
-            <div className="mt-2">
-              <input
-                {...register("groupid")}
-                name="groupid"
-                id="groupid"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="0xe0e48a90f6e0fcbd6dd5c27de151e263"
-              />
-            </div>
-          </div>
-          <div>
-            <label
-              htmlFor="entryPoint"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Paymaster entryPoint
-            </label>
-            <div className="mt-2">
-              <input
-                {...register("entrypoint")}
-                name="entrypoint"
-                id="entryPoint"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
-              />
-            </div>
-          </div>
-
-          <input
-            type="submit"
-            className="mt-4 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          />
-        </form>
-        {isLoading && (
-          <div>
-            Creating your zkPaymaster...
+          <form
+            onSubmit={handleSubmit((formData) => deployFactory(formData))}
+            className="w-2/3"
+          >
             <div>
-              <a href={`https://goerli.etherscan.io/tx/${data?.hash}`}>
-                Etherscan
-              </a>
-            </div>
-          </div>
-        )}
-        {isSuccess && (
-          <div>
-            Successfully created your zkPaymaster!
-            <div>
-              <a href={`https://goerli.etherscan.io/tx/${data?.hash}`}>
-                Etherscan
-              </a>
-            </div>
-            <div className="mt-4">
               <a
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                href="https://zkpaymaster.vercel.app/"
+                className="underline"
+                href={`https://factory.sismo.io/apps-explorer`}
               >
-                PUT IT TO ACTION
+                Link to Sismo
               </a>
             </div>
-          </div>
-        )}
-      </main>
+            <div>
+              <label
+                htmlFor="appid"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Sismo AppID
+              </label>
+              <div className="mt-2">
+                <input
+                  {...register("appid")}
+                  name="appid"
+                  id="appid"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="0x45792cd187672019da6ee08aef36eb46"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="groupid"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Simso groupID
+              </label>
+              <div className="mt-2">
+                <input
+                  {...register("groupid")}
+                  name="groupid"
+                  id="groupid"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="0xe0e48a90f6e0fcbd6dd5c27de151e263"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="entryPoint"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Paymaster entryPoint
+              </label>
+              <div className="mt-2">
+                <input
+                  {...register("entrypoint")}
+                  name="entrypoint"
+                  id="entryPoint"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
+                />
+              </div>
+            </div>
+
+            <input
+              type="submit"
+              className="mt-4 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            />
+          </form>
+          {isLoading && (
+            <div>
+              Creating your zkPaymaster...
+              <div>
+                <a href={`https://goerli.etherscan.io/tx/${data?.hash}`}>
+                  Etherscan
+                </a>
+              </div>
+            </div>
+          )}
+          {isSuccess && (
+            <div>
+              Successfully created your zkPaymaster!
+              <div>
+                <a href={`https://goerli.etherscan.io/tx/${data?.hash}`}>
+                  Etherscan
+                </a>
+              </div>
+              <div className="mt-4">
+                <a
+                  className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  href="https://zkpaymaster.vercel.app/"
+                >
+                  PUT IT TO ACTION
+                </a>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
 
       <footer className={styles.footer}>
         <a href="https://rainbow.me" rel="noopener noreferrer" target="_blank">

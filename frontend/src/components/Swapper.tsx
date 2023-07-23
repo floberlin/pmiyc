@@ -83,7 +83,7 @@ const Swapper: React.FC<Props> = ({
       };
 
       const userOp = await smartAccount.buildUserOp([tx]);
-      userOp.paymasterAndData = `0xD1b2842F5ca284cE94d4CE276090e840D7E440E5${sismoResponse.slice(
+      userOp.paymasterAndData = `0xd553b30c7e958B4891B4b6fD82Cbfa868dd6d586${sismoResponse.slice(
         2
       )}`;
 
