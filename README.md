@@ -1,5 +1,21 @@
 # zkPaymaster - EthGlobal Paris 2023
 
+[Link to EthGlobal Showcase Page](https://ethglobal.com/showcase/zkpaymaster-dbooj).
+
+[Link to the deployed zkPaymasterFactory](https://zkpfactory.vercel.app)
+
+[Link to the deployed zkPaymaster](https://zkpaymaster.vercel.app)
+
+**Winner of:**
+
+🧠 Ethereum Foundation — Best ERC-4337
+
+5️⃣ Sismo — Top 5
+
+🔑 Biconomy — Best Use
+
+💸 MakerDAO — 🥈 Best use of sDAI
+
 ## Description
 
 Introducing zkPaymaster: A Revolutionary Account Abstraction Paymaster utilising Sismo zero knowledge proofs to conditionally sponsor transactions for users.
